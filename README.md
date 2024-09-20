@@ -70,9 +70,9 @@ The original version is forked from mcbed's port of franka_ros2 for [humble][mcb
 
 ## Installation Guide
 
-(Tested on Ubuntu 22.04, ROS2 Humble, Panda 4.2.2 & 4.2.1, and Libfranka 0.8.0 and 0.9.2)
+(Tested on Ubuntu 22.04, ROS2 Humble, Panda FCI 4.0.4, 4.2.2 and 4.2.1, and Libfranka 0.8.0 and 0.9.2)
 
-1. Build libfranka 0.8.0 or 0.9.2 from source by following the [instructions][libfranka-instructions]. Choose proper version according to your FCI version.
+1. Build libfranka 0.8.0 or 0.9.2 from source by following the [instructions][libfranka-instructions]. Choose proper version according to your FCI version! If you need to install libfranka 0.9.2, you can use directly LCAS [libfranka 0.9.2][libfranka-LCAS] release
 2. Install FLIR Blackfly_s camera ROS2 driver (required for panda_vision setup), following the [instructions][flir_camera_driver]
 3. Clone this repository into your workspace's `src` folder.
 4. Source the workspace, then in your workspace root, call: 
@@ -105,3 +105,5 @@ All packages of `franka_arm_ros2` are licensed under the [Apache 2.0 license][ap
 [moveit2_commander_recorder]: https://github.com/LCAS/moveit2_commander_recorder
 
 [viewpoint_generator]: https://github.com/LCAS/viewpoint_generator
+
+[libfranka-LCAS]: https://github.com/LCAS/libfranka/tree/lcas_0.9.2
