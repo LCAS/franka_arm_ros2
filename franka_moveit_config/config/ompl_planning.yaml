@@ -124,6 +124,8 @@ planner_configs:
     type: geometric::TrajOpt
 
 panda_arm:
+  enforce_constrained_state_space: true
+  projection_evaluator: joints(panda_joint1, panda_joint2)
   planner_configs:
     - SBLkConfigDefault
     - ESTkConfigDefault
@@ -150,6 +152,36 @@ panda_arm:
     - SPARStwokConfigDefault
     - TrajOptDefault
 panda_arm_hand:
+  enforce_constrained_state_space: true
+  projection_evaluator: joints(panda_joint1, panda_joint2)
+  planner_configs:
+    - SBLkConfigDefault
+    - ESTkConfigDefault
+    - LBKPIECEkConfigDefault
+    - BKPIECEkConfigDefault
+    - KPIECEkConfigDefault
+    - RRTkConfigDefault
+    - RRTConnectkConfigDefault
+    - RRTstarkConfigDefault
+    - TRRTkConfigDefault
+    - PRMkConfigDefault
+    - PRMstarkConfigDefault
+    - FMTkConfigDefault
+    - BFMTkConfigDefault
+    - PDSTkConfigDefault
+    - STRIDEkConfigDefault
+    - BiTRRTkConfigDefault
+    - LBTRRTkConfigDefault
+    - BiESTkConfigDefault
+    - ProjESTkConfigDefault
+    - LazyPRMkConfigDefault
+    - LazyPRMstarkConfigDefault
+    - SPARSkConfigDefault
+    - SPARStwokConfigDefault
+    - TrajOptDefault
+panda_vision:
+  enforce_constrained_state_space: true
+  projection_evaluator: joints(panda_joint1, panda_joint2)
   planner_configs:
     - SBLkConfigDefault
     - ESTkConfigDefault
