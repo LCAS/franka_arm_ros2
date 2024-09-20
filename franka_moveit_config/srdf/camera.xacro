@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="panda">
+  <xacro:macro name="camera" params="arm_id:='panda' camera_id:='camera' ">
+
+    <group name="camera">
+      <link name="${camera_id}"/>
+      <link name="${camera_id}_lens"/>
+      <link name="${camera_id}_optical"/>
+      <joint name="${arm_id}_camera_joint"/>
+      <joint name="${camera_id}_lens_joint"/>
+      <joint name="${camera_id}_optical_joint"/>
+    </group>
+    <disable_collisions link1="${camera_id}" link2="${camera_id}_lens" reason="Adjacent"/>
+    <disable_collisions link1="${camera_id}_lens" link2="${camera_id}_optical" reason="Adjacent"/>
+    <disable_collisions link1="${camera_id}" link2="${camera_id}_optical" reason="Never"/>
+  </xacro:macro>
+</robot>

@@ -26,7 +26,7 @@ def generate_launch_description():
     load_gripper = LaunchConfiguration(load_gripper_parameter_name)
 
     franka_xacro_file = os.path.join(get_package_share_directory('franka_description'), 'robots',
-                                     'panda_arm.urdf.xacro')
+                                     'panda_arm_camera.urdf.xacro')
     robot_description = Command(
         [FindExecutable(name='xacro'), ' ', franka_xacro_file, ' hand:=', load_gripper])
 

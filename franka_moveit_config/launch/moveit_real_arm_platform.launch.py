@@ -45,24 +45,30 @@ def generate_launch_description():
     use_fake_hardware_parameter_name = 'use_fake_hardware'
     load_gripper_parameter_name = 'load_gripper'
     fake_sensor_commands_parameter_name = 'fake_sensor_commands'
+    load_camera_parameter_name = 'load_camera'
+
+    camera_id_parameter_name = 'serial'
+    camera_model_parameter_name = 'camera_type'
 
     robot_ip = LaunchConfiguration(robot_ip_parameter_name)
     use_fake_hardware = LaunchConfiguration(use_fake_hardware_parameter_name)
     load_gripper = LaunchConfiguration(load_gripper_parameter_name)
     fake_sensor_commands = LaunchConfiguration(fake_sensor_commands_parameter_name)
+    load_camera = LaunchConfiguration(load_camera_parameter_name)
 
+    camera_id = LaunchConfiguration(camera_id_parameter_name)
+    camera_model = LaunchConfiguration(camera_model_parameter_name)
 
     # Command-line arguments
-
     db_arg = DeclareLaunchArgument(
         'db', default_value='False', description='Database flag'
     )
 
     # planning_context
     franka_xacro_file = os.path.join(get_package_share_directory('franka_description'), 'robots',
-                                     'panda_arm.urdf.xacro')
+                                     'panda_arm_platform.urdf.xacro')
     robot_description_config = Command(
-        [FindExecutable(name='xacro'), ' ', franka_xacro_file, ' hand:=', load_gripper,
+        [FindExecutable(name='xacro'), ' ', franka_xacro_file, ' hand:=', load_gripper, ' camera:=', load_camera, ' camera_model:=', camera_model,
          ' robot_ip:=', robot_ip, ' use_fake_hardware:=', use_fake_hardware,
          ' fake_sensor_commands:=', fake_sensor_commands])
 
@@ -70,9 +76,9 @@ def generate_launch_description():
 
     franka_semantic_xacro_file = os.path.join(get_package_share_directory('franka_moveit_config'),
                                               'srdf',
-                                              'panda_arm.srdf.xacro')
+                                              'panda_arm_platform.srdf.xacro')
     robot_description_semantic_config = Command(
-        [FindExecutable(name='xacro'), ' ', franka_semantic_xacro_file, ' hand:=', load_gripper]
+        [FindExecutable(name='xacro'), ' ', franka_semantic_xacro_file, ' hand:=', load_gripper, ' camera:=', load_camera]
     )
     robot_description_semantic = {
         'robot_description_semantic': robot_description_semantic_config
@@ -137,6 +143,7 @@ def generate_launch_description():
             trajectory_execution,
             moveit_controllers,
             planning_scene_monitor_parameters,
+            {"publish_robot_description_semantic": True},
         ],
     )
 
@@ -224,17 +231,35 @@ def generate_launch_description():
         use_fake_hardware_parameter_name,
         default_value='false',
         description='Use fake hardware')
+    
+    load_camera_arg = DeclareLaunchArgument(
+            load_camera_parameter_name,
+            default_value='true',
+            description='Use Flir camera as an end-effector, otherwise, the robot is loaded '
+                        'without an end-effector.')  
+
     load_gripper_arg = DeclareLaunchArgument(
             load_gripper_parameter_name,
             default_value='false',
             description='Use Franka Gripper as an end-effector, otherwise, the robot is loaded '
                         'without an end-effector.')
     
+    camera_id_arg = DeclareLaunchArgument(
+            camera_id_parameter_name,
+            default_value="'22141921'", 
+            description='Camera id, serial number.')
+
+    camera_model_arg = DeclareLaunchArgument(
+            camera_model_parameter_name,
+            default_value='blackfly_s', 
+            description='Camera model, example blackfly_s.')   
+    
     fake_sensor_commands_arg = DeclareLaunchArgument(
         fake_sensor_commands_parameter_name,
         default_value='false',
         description="Fake sensor commands. Only valid when '{}' is true".format(
             use_fake_hardware_parameter_name))
+    
     gripper_launch_file = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([PathJoinSubstitution(
             [FindPackageShare('franka_gripper'), 'launch', 'gripper.launch.py'])]),
@@ -242,19 +267,30 @@ def generate_launch_description():
                           use_fake_hardware_parameter_name: use_fake_hardware}.items(),
         condition=IfCondition(load_gripper)
     )
+
+    camera_launch_file = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([PathJoinSubstitution(
+            [FindPackageShare('spinnaker_camera_driver'), 'launch', 'driver_node.launch.py'])]),
+        launch_arguments={'camera_type': camera_model,
+                          'serial': camera_id}.items(),
+        condition=IfCondition(load_camera)
+    )
+
     return LaunchDescription(
         [robot_arg,
          use_fake_hardware_arg,
          fake_sensor_commands_arg,
          load_gripper_arg,
+         load_camera_arg,
+         camera_id_arg,
+         camera_model_arg,
          db_arg,
          rviz_node,
-         robot_state_publisher,
          run_move_group_node,
+         robot_state_publisher,
          ros2_control_node,
          mongodb_server_node,
          joint_state_publisher,
-         gripper_launch_file
-         ]
-        + load_controllers
-    )
+         gripper_launch_file,
+         camera_launch_file,
+         *load_controllers])
