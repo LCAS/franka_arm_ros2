@@ -73,7 +73,7 @@ The original version is forked from mcbed's port of franka_ros2 for [humble][mcb
 (Tested on Ubuntu 22.04, ROS2 Humble, Panda 4.2.2 & 4.2.1, and Libfranka 0.8.0 and 0.9.2)
 
 1. Build libfranka 0.8.0 or 0.9.2 from source by following the [instructions][libfranka-instructions]. Choose proper version according to your FCI version.
-2. Install FLIR Blackfly_s camera ROS2 driver (required for panda_vision setup), following the [instructions][https://github.com/LCAS/flir_camera_driver]
+2. Install FLIR Blackfly_s camera ROS2 driver (required for panda_vision setup), following the [instructions][flir_camera_driver]
 3. Clone this repository into your workspace's `src` folder.
 4. Source the workspace, then in your workspace root, call: 
 ```bash
@@ -84,8 +84,9 @@ colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DFranka_DIR:PATH=/path/to/
 ```bash
 ros2 launch franka_moveit_config moveit_real_arm_platform.launch.py robot_ip:=<fci-ip> camera_type:=blackfly_s serial:="'<camera-serial>'" load_camera:=True
 ```
-Example robot_ip:=172.16.0.2, serial:="'22141921'" 
-7. To control the arm by MoveIt2 for plant scanning, please follow [moveit2_commander_recorder][https://github.com/LCAS/moveit2_commander_recorder] and [viewpoint_generator][https://github.com/LCAS/viewpoint_generator] repositories.
+Example `robot_ip:=172.16.0.2`, `serial:="'22141921'"` 
+
+7. To control the arm by MoveIt2 for plant scanning, please follow [moveit2_commander_recorder][moveit2_commander_recorder] and [viewpoint_generator][viewpoint_generator] repositories.
 
 ## License
 
@@ -98,3 +99,9 @@ All packages of `franka_arm_ros2` are licensed under the [Apache 2.0 license][ap
 [mcbed-humble]: https://github.com/mcbed/franka_ros2/tree/humble
 
 [libfranka-instructions]: https://frankaemika.github.io/docs/installation_linux.html
+
+[flir_camera_driver]: https://github.com/LCAS/flir_camera_driver
+
+[moveit2_commander_recorder]: https://github.com/LCAS/moveit2_commander_recorder
+
+[viewpoint_generator]: https://github.com/LCAS/viewpoint_generator
