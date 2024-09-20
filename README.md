@@ -1,4 +1,4 @@
-# (WIP) ROS 2 port of franka_ros for Panda (FER) robots
+# ROS2 port of franka_ros for Franka Emika Panda (FER) robots
 
 This project is for porting over the various functionalities from franka_ros into ROS2 for Panda robots.
 Franka Emika has dropped software support for robots older than FR3, which leaves a lot of older hardware outdated and unable to migrate to ROS2.
@@ -7,7 +7,8 @@ This repository attempts to remedy that somewhat, by bringing existing features 
 
 As of 16.11.23, almost all single-robot `franka_ros` features have been migrated, including different controller interfaces, error recovery, and runtime parameter setters. Multi-arm support is also available via `franka_multi_hardware_interface`, launched via `dual_franka_launch.py`.
 
-The repo is still in active development, and I will try to address any missing features or bugs as soon as possible.
+For upgraded version of this repo including MuJoCo simulator version of Franka Panda arm, please visit [this repository][
+https://github.com/yilmazabdurrah/multi_franka_arm_ros2]
 
 ## Credits
 The original version is forked from mcbed's port of franka_ros2 for [humble][mcbed-humble].
@@ -69,17 +70,27 @@ The original version is forked from mcbed's port of franka_ros2 for [humble][mcb
 
 ## Installation Guide
 
-(Tested on Ubuntu 22.04, ROS2 Humble, Panda 4.2.2 & 4.2.1, and Libfranka 0.9.2)
+(Tested on Ubuntu 22.04, ROS2 Humble, Panda FCI 4.0.4, 4.2.2 and 4.2.1, and Libfranka 0.8.0 and 0.9.2)
 
-1. Build libfranka 0.9.2 from source by following the [instructions][libfranka-instructions].
-2. Clone this repository into your workspace's `src` folder.
-3. Source the workspace, then in your workspace root, call: `colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DFranka_DIR:PATH=/path/to/libfranka/build`
-4. Add the build path to your `LD_LIBRARY_PATH`: `LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/path/to/libfranka/build"`
-5. To test, source the workspace, and run `ros2 launch franka_bringup franka.launch.py robot_ip:=<fci-ip>`.
+1. Build libfranka 0.8.0 or 0.9.2 from source by following the [instructions][libfranka-instructions]. Choose proper version according to your FCI version! If you need to install libfranka 0.9.2, you can use directly LCAS [libfranka 0.9.2][libfranka-LCAS] release
+2. Install FLIR Blackfly_s camera ROS2 driver (required for panda_vision setup), following the [instructions][flir_camera_driver]
+3. Clone this repository into your workspace's `src` folder.
+4. Source the workspace, then in your workspace root, call: 
+```bash
+colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DFranka_DIR:PATH=/path/to/libfranka/build`
+```
+5. Add the build path to your `LD_LIBRARY_PATH`: `LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/path/to/libfranka/build"`
+6. To test, source the workspace, and run: 
+```bash
+ros2 launch franka_moveit_config moveit_real_arm_platform.launch.py robot_ip:=<fci-ip> camera_type:=blackfly_s serial:="'<camera-serial>'" load_camera:=True
+```
+Example `robot_ip:=172.16.0.2`, `serial:="'22141921'"` 
+
+7. To control the arm by MoveIt2 for plant scanning, please follow [moveit2_commander_recorder][moveit2_commander_recorder] and [viewpoint_generator][viewpoint_generator] repositories.
 
 ## License
 
-All packages of `panda_ros2` are licensed under the [Apache 2.0 license][apache-2.0], following `franka_ros2`.
+All packages of `franka_arm_ros2` are licensed under the [Apache 2.0 license][apache-2.0], following `franka_ros2` and `panda_ros2`.
 
 [apache-2.0]: https://www.apache.org/licenses/LICENSE-2.0.html
 
@@ -88,3 +99,11 @@ All packages of `panda_ros2` are licensed under the [Apache 2.0 license][apache-
 [mcbed-humble]: https://github.com/mcbed/franka_ros2/tree/humble
 
 [libfranka-instructions]: https://frankaemika.github.io/docs/installation_linux.html
+
+[flir_camera_driver]: https://github.com/LCAS/flir_camera_driver
+
+[moveit2_commander_recorder]: https://github.com/LCAS/moveit2_commander_recorder
+
+[viewpoint_generator]: https://github.com/LCAS/viewpoint_generator
+
+[libfranka-LCAS]: https://github.com/LCAS/libfranka/tree/lcas_0.9.2
