@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="panda">
+
+  <xacro:arg name="arm_id" default="panda"/> <!-- Name of this panda -->
+  <xacro:arg name="camera_id" default="camera"/> <!-- Name of camera -->
+  <xacro:arg name="hand" default="false"/> <!-- Should a franka_gripper be mounted at the flange? (Currently does not work without it) -->
+   <xacro:arg name="camera" default="true"/> <!-- Should a camera be mounted at the flange? (Currently does not work without it) -->
+
+  <xacro:property name="arm_id" value="$(arg arm_id)"/>
+  <xacro:property name="camera_id" value="$(arg camera_id)"/>
+
+  <xacro:include filename="$(find franka_moveit_config)/srdf/panda_arm.xacro"/>
+  <xacro:panda_arm arm_id="${arm_id}"/>
+  <xacro:panda_arm camera_id="${camera_id}"/>
+
+  <xacro:if value="$(arg hand)">
+    <xacro:include filename="$(find franka_moveit_config)/srdf/hand.xacro"/>
+    <xacro:hand arm_id="${arm_id}"/>
+
+    <xacro:include filename="$(find franka_moveit_config)/srdf/panda_arm_hand.xacro"/>
+    <xacro:panda_arm_hand arm_id="${arm_id}"/>
+  </xacro:if>
+
+  <xacro:if value="$(arg camera)">
+    <xacro:include filename="$(find franka_moveit_config)/srdf/camera.xacro"/>
+    <xacro:camera arm_id="${arm_id}"/>
+    <xacro:camera camera_id="${camera_id}"/>
+
+    <xacro:include filename="$(find franka_moveit_config)/srdf/panda_arm_camera.xacro"/>
+    <xacro:panda_arm_camera arm_id="${arm_id}"/>
+    <xacro:panda_arm_camera camera_id="${camera_id}"/>
+  </xacro:if>
+</robot>
