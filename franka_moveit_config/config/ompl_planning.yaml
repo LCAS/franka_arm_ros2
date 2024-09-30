@@ -122,6 +122,26 @@ planner_configs:
     max_failures: 5000  # maximum consecutive failure limit. default: 5000
   TrajOptDefault:
     type: geometric::TrajOpt
+  RRTsharpkConfigDefault:
+    type: geometric::RRTsharp
+    range: 0.0  # Max motion added to tree. ==> maxDistance_ default: 0.0, if 0.0, set on setup()
+    goal_bias: 0.05  # When close to goal select goal, with this probability? default: 0.05
+    delay_collision_checking: 1  # Stop collision checking as soon as C-free parent found. default: 1
+  RRTXstatickConfigDefault:
+    type: geometric::RRTXstatic
+    range: 0.0
+    goal_bias: 0.05
+    delay_collision_checking: 1
+  pilz_lin:
+    type: pilz_industrial_motion_planner/Linear
+    planning_time: 10.0
+    max_velocity_scaling_factor: 0.5
+    max_acceleration_scaling_factor: 0.5
+  pilz_circ:
+    type: pilz_industrial_motion_planner/Circular
+    planning_time: 10.0
+    max_velocity_scaling_factor: 0.5
+    max_acceleration_scaling_factor: 0.5
 
 panda_arm:
   enforce_constrained_state_space: true
@@ -151,6 +171,8 @@ panda_arm:
     - SPARSkConfigDefault
     - SPARStwokConfigDefault
     - TrajOptDefault
+    - pilz_lin  
+    - pilz_circ
 panda_arm_hand:
   enforce_constrained_state_space: true
   projection_evaluator: joints(panda_joint1, panda_joint2)
@@ -179,6 +201,8 @@ panda_arm_hand:
     - SPARSkConfigDefault
     - SPARStwokConfigDefault
     - TrajOptDefault
+    - pilz_lin  
+    - pilz_circ
 panda_vision:
   enforce_constrained_state_space: true
   projection_evaluator: joints(panda_joint1, panda_joint2)
@@ -207,4 +231,6 @@ panda_vision:
     - SPARSkConfigDefault
     - SPARStwokConfigDefault
     - TrajOptDefault
+    - pilz_lin  
+    - pilz_circ
 
