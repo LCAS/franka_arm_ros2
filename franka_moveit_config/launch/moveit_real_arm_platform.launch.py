@@ -106,6 +106,23 @@ def generate_launch_description():
     )
     ompl_planning_pipeline_config['move_group'].update(ompl_planning_yaml)
 
+    pilz_planning_pipeline_config = {
+        'move_group': {
+            'planning_plugin': 'pilz_industrial_motion_planner/CommandPlanner',
+            'request_adapters': 'default_planner_request_adapters/AddTimeOptimalParameterization '
+                                'default_planner_request_adapters/ResolveConstraintFrames '
+                                'default_planner_request_adapters/FixWorkspaceBounds '
+                                'default_planner_request_adapters/FixStartStateBounds '
+                                'default_planner_request_adapters/FixStartStateCollision '
+                                'default_planner_request_adapters/FixStartStatePathConstraints',
+            'start_state_max_bounds_error': 0.1,
+        }
+    }
+    pilz_planning_yaml = load_yaml(
+        'franka_moveit_config', 'config/ompl_planning.yaml'
+    )
+    pilz_planning_pipeline_config['move_group'].update(pilz_planning_yaml)
+
     # Trajectory Execution Functionality
     moveit_simple_controllers_yaml = load_yaml(
         'franka_moveit_config', 'config/panda_controllers.yaml'
@@ -130,6 +147,12 @@ def generate_launch_description():
         'publish_transforms_updates': True,
     }
 
+    combined_planning_pipelines_config = {
+        'move_group': {
+            'planning_pipelines': 'ompl, pilz',
+        }
+    }
+
     # Start the actual move_group node/action server
     run_move_group_node = Node(
         package='moveit_ros_move_group',
@@ -139,7 +162,9 @@ def generate_launch_description():
             robot_description,
             robot_description_semantic,
             kinematics_yaml,
+            combined_planning_pipelines_config,
             ompl_planning_pipeline_config,
+            pilz_planning_pipeline_config,
             trajectory_execution,
             moveit_controllers,
             planning_scene_monitor_parameters,
