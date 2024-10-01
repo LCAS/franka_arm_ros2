@@ -46,6 +46,7 @@ def generate_launch_description():
     load_gripper_parameter_name = 'load_gripper'
     fake_sensor_commands_parameter_name = 'fake_sensor_commands'
     load_camera_parameter_name = 'load_camera'
+    planner_parameter_name = 'planner'
 
     camera_id_parameter_name = 'serial'
     camera_model_parameter_name = 'camera_type'
@@ -58,6 +59,8 @@ def generate_launch_description():
 
     camera_id = LaunchConfiguration(camera_id_parameter_name)
     camera_model = LaunchConfiguration(camera_model_parameter_name)
+
+    planner_ = LaunchConfiguration(planner_parameter_name)
 
     # Command-line arguments
     db_arg = DeclareLaunchArgument(
@@ -149,9 +152,32 @@ def generate_launch_description():
 
     combined_planning_pipelines_config = {
         'move_group': {
-            'planning_pipelines': 'ompl, pilz',
+            'planning_plugin': planner_,
+            'request_adapters': 'default_planner_request_adapters/AddTimeOptimalParameterization '
+                                'default_planner_request_adapters/ResolveConstraintFrames '
+                                'default_planner_request_adapters/FixWorkspaceBounds '
+                                'default_planner_request_adapters/FixStartStateBounds '
+                                'default_planner_request_adapters/FixStartStateCollision '
+                                'default_planner_request_adapters/FixStartStatePathConstraints'
+                                'default_planning_request_adapters/CheckStartStateBounds'
+                                'default_planning_request_adapters/CheckStartStateCollision'
+                                'default_planning_request_adapters/ValidateWorkspaceBounds',
+            'start_state_max_bounds_error': 0.1,
+            'default_planner_config': 'PTP',
+        },
+        'robot_description_planning':{
+            'cartesian_limits': {
+                'max_trans_vel': 0.2,
+                'max_trans_acc': 1.0,
+                'max_trans_dec': -1.0,
+                'max_rot_vel': 0.5
+            }
         }
     }
+    combined_planning_yaml = load_yaml(
+        'franka_moveit_config', 'config/ompl_planning.yaml'
+    )
+    combined_planning_pipelines_config['move_group'].update(combined_planning_yaml)
 
     # Start the actual move_group node/action server
     run_move_group_node = Node(
@@ -163,8 +189,6 @@ def generate_launch_description():
             robot_description_semantic,
             kinematics_yaml,
             combined_planning_pipelines_config,
-            ompl_planning_pipeline_config,
-            pilz_planning_pipeline_config,
             trajectory_execution,
             moveit_controllers,
             planning_scene_monitor_parameters,
@@ -262,6 +286,11 @@ def generate_launch_description():
             default_value='true',
             description='Use Flir camera as an end-effector, otherwise, the robot is loaded '
                         'without an end-effector.')  
+    
+    planner_arg = DeclareLaunchArgument(
+            planner_parameter_name,
+            default_value='ompl_interface/OMPLPlanner',
+            description='Choose planner to be used for arm control ') 
 
     load_gripper_arg = DeclareLaunchArgument(
             load_gripper_parameter_name,
@@ -307,6 +336,7 @@ def generate_launch_description():
          fake_sensor_commands_arg,
          load_gripper_arg,
          load_camera_arg,
+         planner_arg,
          camera_id_arg,
          camera_model_arg,
          db_arg,
