@@ -132,16 +132,39 @@ planner_configs:
     range: 0.0
     goal_bias: 0.05
     delay_collision_checking: 1
-  pilz_lin:
+  PILZ_LIN:
     type: pilz_industrial_motion_planner/Linear
+    planner_id: "LIN"
     planning_time: 10.0
     max_velocity_scaling_factor: 0.5
     max_acceleration_scaling_factor: 0.5
-  pilz_circ:
+  PILZ_CIRC:
     type: pilz_industrial_motion_planner/Circular
+    planner_id: "CIRC"
     planning_time: 10.0
     max_velocity_scaling_factor: 0.5
     max_acceleration_scaling_factor: 0.5
+  PILZ_PTP:
+    type: pilz_industrial_motion_planner/Circular
+    planner_id: "PTP"
+    planning_time: 10.0
+    max_velocity_scaling_factor: 0.5
+    max_acceleration_scaling_factor: 0.5
+
+robot_description_planning:
+  cartesian_limits:
+    max_trans_vel: 0.2        # Maximum translational velocity (m/s)
+    max_trans_acc: 0.5        # Maximum translational acceleration (m/s^2)
+    max_trans_dec: 0.5        # Maximum translational deceleration (m/s^2)
+    max_rot_vel: 1.0          # Maximum rotational velocity (rad/s)
+
+planning_pipelines:
+  default:
+    planner_configs: OMPL
+  ompl:
+    planner_configs: OMPL
+  pilz:
+    planner_configs: [PILZ_LIN, PILZ_CIRC, PILZ_PTP]
 
 panda_arm:
   enforce_constrained_state_space: true
@@ -171,8 +194,9 @@ panda_arm:
     - SPARSkConfigDefault
     - SPARStwokConfigDefault
     - TrajOptDefault
-    - pilz_lin  
-    - pilz_circ
+    - PILZ_LIN  
+    - PILZ_CIRC
+    - OMPL
 panda_arm_hand:
   enforce_constrained_state_space: true
   projection_evaluator: joints(panda_joint1, panda_joint2)
@@ -201,8 +225,9 @@ panda_arm_hand:
     - SPARSkConfigDefault
     - SPARStwokConfigDefault
     - TrajOptDefault
-    - pilz_lin  
-    - pilz_circ
+    - PILZ_LIN  
+    - PILZ_CIRC
+    - OMPL
 panda_vision:
   enforce_constrained_state_space: true
   projection_evaluator: joints(panda_joint1, panda_joint2)
@@ -231,6 +256,7 @@ panda_vision:
     - SPARSkConfigDefault
     - SPARStwokConfigDefault
     - TrajOptDefault
-    - pilz_lin  
-    - pilz_circ
+    - PILZ_LIN  
+    - PILZ_CIRC
+    - OMPL
 
