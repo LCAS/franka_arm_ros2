@@ -66,7 +66,7 @@
       <parent link="${arm_id}_link0"/>
       <child link="${arm_id}_link1"/>
       <axis xyz="0 0 1"/>
-      <limit effort="87" lower="-2.7473" upper="2.7473" velocity="2.1750"/>
+      <limit effort="87" lower="-2.7473" upper="2.7473" velocity="2.1750" acceleration="1.0"/>
     </joint>
     <link name="${arm_id}_link2">
       <visual>
@@ -99,7 +99,7 @@
       <parent link="${arm_id}_link1"/>
       <child link="${arm_id}_link2"/>
       <axis xyz="0 0 1"/>
-      <limit effort="87" lower="-1.6728" upper="1.6728" velocity="2.1750"/>
+      <limit effort="87" lower="-1.6728" upper="1.6728" velocity="2.1750" acceleration="1.0"/>
     </joint>
     <link name="${arm_id}_link3">
       <visual>
@@ -132,7 +132,7 @@
       <parent link="${arm_id}_link2"/>
       <child link="${arm_id}_link3"/>
       <axis xyz="0 0 1"/>
-      <limit effort="87" lower="-2.7473" upper="2.7473" velocity="2.1750"/>
+      <limit effort="87" lower="-2.7473" upper="2.7473" velocity="2.1750" acceleration="1.0"/>
     </joint>
     <link name="${arm_id}_link4">
       <visual>
@@ -165,7 +165,7 @@
       <parent link="${arm_id}_link3"/>
       <child link="${arm_id}_link4"/>
       <axis xyz="0 0 1"/>
-      <limit effort="87" lower="-2.9218" upper="-0.2198" velocity="2.1750"/>
+      <limit effort="87" lower="-2.9218" upper="-0.2198" velocity="2.1750" acceleration="1.0"/>
     </joint>
     <link name="${arm_id}_link5">
       <visual>
@@ -217,7 +217,7 @@
       <parent link="${arm_id}_link4"/>
       <child link="${arm_id}_link5"/>
       <axis xyz="0 0 1"/>
-      <limit effort="12" lower="-2.7473" upper="2.7473" velocity="2.6100"/>
+      <limit effort="12" lower="-2.7473" upper="2.7473" velocity="2.6100" acceleration="1.0"/>
     </joint>
     <link name="${arm_id}_link6">
       <visual>
@@ -250,7 +250,7 @@
       <parent link="${arm_id}_link5"/>
       <child link="${arm_id}_link6"/>
       <axis xyz="0 0 1"/>
-      <limit effort="12" lower="-0.0775" upper="3.6025" velocity="2.6100"/>
+      <limit effort="12" lower="-0.0775" upper="3.6025" velocity="2.6100" acceleration="1.0"/>
     </joint>
     <link name="${arm_id}_link7">
       <visual>
@@ -283,7 +283,7 @@
       <parent link="${arm_id}_link6"/>
       <child link="${arm_id}_link7"/>
       <axis xyz="0 0 1"/>
-      <limit effort="12" lower="-2.7473" upper="2.7473" velocity="2.6100"/>
+      <limit effort="12" lower="-2.7473" upper="2.7473" velocity="2.6100" acceleration="1.0"/>
     </joint>
     <link name="${arm_id}_link8">
       <collision>
