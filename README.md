@@ -82,9 +82,11 @@ colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release -DFranka_DIR:PATH=/path/to/
 5. Add the build path to your `LD_LIBRARY_PATH`: `LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/path/to/libfranka/build"`
 6. To test, source the workspace, and run: 
 ```bash
-ros2 launch franka_moveit_config moveit_real_arm_platform.launch.py robot_ip:=<fci-ip> camera_type:=blackfly_s serial:="'<camera-serial>'" load_camera:=True
+ros2 launch franka_moveit_config moveit_real_arm_platform.launch.py robot_ip:=<fci-ip> camera_type:=blackfly_s serial:="'<camera-serial>'" load_camera:=True planner:=<planner_name>
 ```
-Example `robot_ip:=172.16.0.2`, `serial:="'22141921'"` 
+Example `robot_ip:=172.16.0.2`, `serial:="'22141921'"`, `planner:=pilz_industrial_motion_planner/CommandPlanner` 
+
+If needed to test on fake hardware add `use_fake_hardware:=True` argument to the launch file
 
 7. To control the arm by MoveIt2 for plant scanning, please follow [moveit2_commander_recorder][moveit2_commander_recorder] and [viewpoint_generator][viewpoint_generator] repositories.
 
