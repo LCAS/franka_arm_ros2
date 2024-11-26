@@ -219,19 +219,21 @@ def generate_launch_description():
         package='robot_state_publisher',
         executable='robot_state_publisher',
         name='robot_state_publisher',
-        output='both',
+        output='screen',
         parameters=[robot_description],
+        remappings=[('joint_states', 'franka/joint_states')],
     )
 
     ros2_controllers_path = os.path.join(
         get_package_share_directory('franka_moveit_config'),
         'config',
-        'panda_ros_controllers.yaml',
+        'panda_mock_ros_controllers.yaml' if use_fake_hardware else 'panda_ros_controllers.yaml',
     )
+
     ros2_control_node = Node(
         package='controller_manager',
         executable='ros2_control_node',
-        parameters=[robot_description, ros2_controllers_path],
+        parameters=[robot_description, ros2_controllers_path], #[ros2_controllers_path]
         remappings=[('joint_states', 'franka/joint_states')],
         output={
             'stdout': 'screen',
